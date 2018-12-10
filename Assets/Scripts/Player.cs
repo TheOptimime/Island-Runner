@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
     public float speed;
     public float verticalVelocity;
+    public float jumpVelocity;
+    public float gravity;
 
     CharacterController cc;
 
@@ -22,9 +24,26 @@ public class Player : MonoBehaviour
         //Setting up move position
         Vector3 movePosition = Vector3.zero;
         movePosition.x = speed;
-        movePosition.y -= 9.8f;
+        verticalVelocity -= gravity;
+        
+
+        //if statement for jump momentum
+        if (Input.GetButtonDown("Jump") && cc.isGrounded)
+        {
+            verticalVelocity = jumpVelocity;
+        }
+
+        movePosition.y = verticalVelocity;
+
+        //Prevents infinite falling
+        if (cc.isGrounded==true && verticalVelocity < 0)
+        {
+            verticalVelocity = 0;
+        }
+
+        //Movement
         cc.Move(movePosition * Time.deltaTime);
 
-
-	}
+        
+    }
 }
