@@ -10,11 +10,16 @@ public class Player : MonoBehaviour
     public float jumpVelocity;
     public float gravity;
 
+    
+    public float foodMeter;
+    bool doubleJumpUsed;
+
     CharacterController cc;
 
 	// Use this for initialization
 	void Start ()
     {
+        foodMeter = 100f;
         cc = GetComponent<CharacterController>();
 	}
 	
@@ -25,17 +30,28 @@ public class Player : MonoBehaviour
         Vector3 movePosition = Vector3.zero;
         movePosition.x = speed;
         verticalVelocity -= gravity;
-        
+        foodMeter-=0.01f;
+        //Resets the double jump
+        if (cc.isGrounded)
+        {
+            doubleJumpUsed = false;
+        }
 
-        //if statement for jump momentum
+        //if statement for jump momentum and double jump
         if (Input.GetButtonDown("Jump") && cc.isGrounded)
         {
             verticalVelocity = jumpVelocity;
         }
+        else if (Input.GetButtonDown("Jump") && !cc.isGrounded && !doubleJumpUsed)
+        {
+            verticalVelocity = jumpVelocity;
+            doubleJumpUsed = true;
+
+        }
 
         movePosition.y = verticalVelocity;
 
-        //Prevents infinite falling
+        
         if (cc.isGrounded==true && verticalVelocity < 0)
         {
             verticalVelocity = 0;
@@ -44,6 +60,10 @@ public class Player : MonoBehaviour
         //Movement
         cc.Move(movePosition * Time.deltaTime);
 
-        
+        //Player starving to death
+        if (foodMeter <= 0)
+        {
+            //kill all living things
+        }
     }
 }
