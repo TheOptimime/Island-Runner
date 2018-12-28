@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public float verticalVelocity;
     public float jumpVelocity;
     public float gravity;
-
+    InputManager inputM;
     
     public float foodMeter;
     bool doubleJumpUsed;
@@ -21,11 +21,13 @@ public class Player : MonoBehaviour
     {
         foodMeter = 100f;
         cc = GetComponent<CharacterController>();
+        inputM = FindObjectOfType<InputManager>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+
         //Setting up move position
         Vector3 movePosition = Vector3.zero;
         movePosition.x = speed;
@@ -38,11 +40,11 @@ public class Player : MonoBehaviour
         }
 
         //if statement for jump momentum and double jump
-        if (Input.GetButtonDown("Jump") && cc.isGrounded)
+        if (inputM.jumpCommand && cc.isGrounded)
         {
             verticalVelocity = jumpVelocity;
         }
-        else if (Input.GetButtonDown("Jump") && !cc.isGrounded && !doubleJumpUsed)
+        else if (inputM.jumpCommand && !cc.isGrounded && !doubleJumpUsed)
         {
             verticalVelocity = jumpVelocity;
             doubleJumpUsed = true;
